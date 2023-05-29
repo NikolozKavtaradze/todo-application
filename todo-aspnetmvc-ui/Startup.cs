@@ -10,6 +10,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using todo_domain_entities;
+using todo_domain_entities.Repository;
+
 namespace todo_aspnetmvc_ui
 {
     public class Startup
@@ -28,6 +30,8 @@ namespace todo_aspnetmvc_ui
 
             services.AddDbContext<ToDoDbContext>(options =>
             options.UseSqlServer(Configuration.GetConnectionString("ToDoDbContext")));
+
+            services.AddTransient<IToDoRepository, ToDoRepository>();
 
         }
 

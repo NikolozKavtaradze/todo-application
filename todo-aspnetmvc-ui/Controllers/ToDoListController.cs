@@ -7,37 +7,35 @@ using System.Threading.Tasks;
 using todo_aspnetmvc_ui.Models;
 using todo_domain_entities;
 using todo_domain_entities.AggregateModels;
+using todo_domain_entities.Repository;
 
 namespace todo_aspnetmvc_ui.Controllers
 {
     public class ToDoListController : Controller
     {
-        private readonly ToDoDbContext _context;
+        private readonly IToDoRepository repository;
 
-        public ToDoListController(ToDoDbContext context)
+        public ToDoListController(IToDoRepository repo)
         {
-            _context = context;
+            repository = repo;
         }
 
-        public async Task<ActionResult> Index(int? id,string filter = null)
+        public IActionResult Index(int? id,string filter = null)
         {
-            id ??= _context.ToDoLists.FirstOrDefault()?.Id;
+            id ??= repository.GetToDoLists().FirstOrDefault()?.Id;
             SelectedList.Id = id ?? 0;
 
-            ViewBag.ListIsPresent = _context.ToDoLists.Any();
+            ViewBag.ListIsPresent = repository.GetToDoLists().Any();
 
             var filters = new Filters(filter);
 
             ViewBag.Filters = filters;
-            ViewBag.Categories = _context.Categories.ToList();
-            ViewBag.Statuses = _context.Statuses.ToList();
+            ViewBag.Categories = repository.GetCategories();
+            ViewBag.Statuses = repository.GetStatuses();
             ViewBag.DueFilters = Filters.DueFilterValue;
 
-            var todoItems = await _context.ToDoItems
-                .Include(x => x.Category)
-                .Include(x => x.Status)
-                .Include(x => x.ToDoList)
-                .Where(x => x.ToDoListId == id).ToListAsync();
+            var todoItems = repository.GetTodoItems(SelectedList.Id);
+                
 
             if (filters.HasCategory)
             {
@@ -73,8 +71,8 @@ namespace todo_aspnetmvc_ui.Controllers
         [HttpGet]
         public IActionResult AddTask()
         {
-            ViewBag.Categories = _context.Categories.ToList();
-            ViewBag.Statuses = _context.Statuses.ToList();
+            ViewBag.Categories = repository.GetCategories();
+            ViewBag.Statuses = repository.GetStatuses();
             var task = new ToDoItemViewModel
             {
                 StatusId = "ongoing"
@@ -83,12 +81,12 @@ namespace todo_aspnetmvc_ui.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult> AddTask(ToDoItemViewModel todoItem)
+        public IActionResult AddTask(ToDoItemViewModel todoItem)
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = _context.Categories.ToList();
-                ViewBag.Statuses = _context.Statuses.ToList();
+                ViewBag.Categories = repository.GetCategories();
+                ViewBag.Statuses = repository.GetStatuses();
                 return View(todoItem);
             }
 
@@ -101,17 +99,16 @@ namespace todo_aspnetmvc_ui.Controllers
                 ToDoListId = SelectedList.Id,
             };
 
-            _context.ToDoItems.Add(task);
-            await _context.SaveChangesAsync();
+            repository.AddTask(task);
             return RedirectToAction("Index", new {id = SelectedList.Id});
 
         }
         [HttpGet]
         public IActionResult EditTask(int id)
         {
-            ViewBag.Categories = _context.Categories.ToList();
-            ViewBag.Statuses = _context.Statuses.ToList();
-            var task = _context.ToDoItems.Find(id);
+            ViewBag.Categories = repository.GetCategories();
+            ViewBag.Statuses = repository.GetStatuses();
+            var task = repository.GetTodoItems(SelectedList.Id).Find(x => x.Id == id);
 
             var todoItem = new ToDoItemViewModel()
             {
@@ -130,29 +127,26 @@ namespace todo_aspnetmvc_ui.Controllers
         {
             if (!ModelState.IsValid)
             {
-                ViewBag.Categories = _context.Categories.ToList();
-                ViewBag.Statuses = _context.Statuses.ToList();
+                ViewBag.Categories = repository.GetCategories().ToList();
+                ViewBag.Statuses = repository.GetStatuses().ToList();
                 return View(todoItem);
             }
 
-            var task = _context.ToDoItems.Find(todoItem.Id);
+            var task = repository.GetTodoItems(SelectedList.Id).Find(x => x.Id == todoItem.Id);
 
             task.Description = todoItem.Description;
             task.DueDate = todoItem.DueDate;
             task.StatusId = todoItem.StatusId;
             task.CategoryId = todoItem.CategoryId;
-            _context.SaveChanges();
+            repository.UpdateTask(task);
 
             return RedirectToAction("Index", new { id = SelectedList.Id });
         }
 
         [HttpGet]
-        public async Task<ActionResult> DeleteTask(int id)
+        public IActionResult DeleteTask(int id)
         {
-            var task = _context.ToDoItems.Find(id);
-
-            _context.Remove(task);
-            await _context.SaveChangesAsync();
+            repository.DeleteTask(id);
 
             return RedirectToAction("Index", new { id = SelectedList.Id });
         }
@@ -169,33 +163,22 @@ namespace todo_aspnetmvc_ui.Controllers
         [HttpPost]
         public IActionResult MarkComplete([FromRoute] string filterId, ToDoItem selected)
         {
-            selected = _context.ToDoItems.Find(selected.Id);
-
-            if (selected != null)
-            {
-                selected.StatusId = "finished";
-                _context.SaveChanges();
-            }
+            repository.MarkComplete(selected.Id);
             return RedirectToAction("Index", new {id = SelectedList.Id, filter = filterId });
         }
 
         [HttpPost]
         public IActionResult DeleteComplete(string filterId)
         {
-            var tasksToDelete = _context.ToDoItems.Where(t => t.ToDoListId == SelectedList.Id && t.StatusId == "finished").ToList();
-
-            _context.ToDoItems.RemoveRange(tasksToDelete);
-            _context.SaveChanges();
-
+            repository.DeleteComplete(SelectedList.Id);
 
             return RedirectToAction("Index",new {id = SelectedList.Id, filter = filterId});
         }
 
         public IActionResult CreateList() => View();
 
-        //POST /todo/create
         [HttpPost]
-        public async Task<ActionResult> CreateList(ToDoList list)
+        public IActionResult CreateList(ToDoList list)
         {
             if (!ModelState.IsValid)
             {
@@ -203,20 +186,17 @@ namespace todo_aspnetmvc_ui.Controllers
             }
 
 
-            _context.ToDoLists.Add(list);
-            await _context.SaveChangesAsync();
-
-            var todoList = _context.ToDoLists.ToList().LastOrDefault();
+            repository.CreateList(list);
+            var todoList = repository.GetToDoLists().LastOrDefault();
 
             SelectedList.Id = todoList.Id;
             return RedirectToAction("Index", new {id = SelectedList.Id});
         }
 
-        //GET /todo/edit/5
 
-        public async Task<ActionResult> EditList(int id)
+        public IActionResult EditList(int id)
         {
-            ToDoList list = await _context.ToDoLists.FindAsync(id);
+            ToDoList list = repository.GetToDoLists().Find(x => x.Id == id);
 
             if (list == null)
             {
@@ -225,43 +205,26 @@ namespace todo_aspnetmvc_ui.Controllers
             return View(list);
         }
 
-        //POST /todo/edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
 
-        public async Task<ActionResult> EditList(ToDoList list)
+        public IActionResult EditList(ToDoList list)
         {
             if(!ModelState.IsValid)
             {
                 return View(list);
             }
-            
-            _context.Entry<ToDoList>(list).State = EntityState.Modified;
-            await _context.SaveChangesAsync();
 
-            TempData["Success"] = "The list has been updated!";
-            return RedirectToAction("Index");
+            repository.UpdateList(list);
+
+            return RedirectToAction("Index", new {id = SelectedList.Id});
         }
 
-        //GET /todo/delete/5
-        public async Task<ActionResult> DeleteList(int id)
+        public IActionResult DeleteList(int id)
         {
-            ToDoList list = await _context.ToDoLists.FindAsync(id);
+            repository.DeleteList(id);
 
-            if (list == null)
-            {
-                TempData["Error"] = "the list does not exist";
-            }
-            else
-            {
-                var tasks = _context.ToDoItems.Where(x => x.ToDoListId == id);
-                _context.ToDoItems.RemoveRange(tasks);
-                _context.ToDoLists.Remove(list);
-                await _context.SaveChangesAsync();
-                TempData["Success"] = "The list has been deleted!";
-            }
-
-            return RedirectToAction("Index");
+            return RedirectToAction("Index", new {id = SelectedList.Id});
         }
     }
 }
