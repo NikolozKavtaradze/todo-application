@@ -1,0 +1,67 @@
+﻿@using todo_domain_entities.AggregateModels
+@model List<ToDoList>
+
+
+<div class="sidebar" id="side_nav">
+    <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
+        <h1 class="fs-4"><span id="headicon" class="text-white rounded shadow px-2 me-2">ToDo</span><span class="text-dark">Application</span></h1>
+        <button class="btn d-md-none d-block close-btn px-1 py-0 text-dark"><i class="fal fa-stream"></i></button>
+    </div>
+    <ul class="list-unstyled px-2 menu-items">
+        <li class="@(ViewBag.SelectedCategory == 1 ? "active" : "") sidebarItem">
+            <a asp-action="Index" asp-controller="ToDoList" asp-route-id=1 class="text-decoration-none px-3 py-2 d-block"><i class="far fa-home"></i> Tasks</a>
+        </li>
+        <li class="@(ViewBag.SelectedCategory == 2 ? "active" : "") sidebarItem">
+            <a asp-action="Index" asp-controller="ToDoList" asp-route-id=2 class="text-decoration-none px-3 py-2 d-block"><i class="far fa-sun"></i> My Day</a>
+        </li>
+
+        <li class="@(ViewBag.SelectedCategory == 3 ? "active" : "") sidebarItem">
+            <a asp-action="Index" asp-controller="ToDoList" asp-route-id=3 class="text-decoration-none px-3 py-2 d-block d-flex justify-content-between">
+                <span><i class="fal fa-stars"></i> Important</span>
+                <span id="tasks_indicator" class="rounded-pill py-0 px-2">@(Model[2].ToDoItems.Count)</span>
+            </a>
+        </li>
+        <li class="@(ViewBag.SelectedCategory == 4 ? "active" : "") sidebarItem">
+            <a asp-action="Index" asp-controller="ToDoList" asp-route-id=4 class="text-decoration-none px-3 py-2 d-block"><i class="fas fa-calendar-alt"></i> Planned</a>
+        </li>
+
+
+    </ul>
+
+    <hr class="h-color mx-3">
+
+    <ul class="sub-menu list-unstyled px-2">
+        <li class="">
+            <a href="#" class="side-link text-decoration-none px-3 py-2 d-block d-flex justify-content-between">
+                <span><i class="far fa-list"></i> My Lists</span>
+                <i class="p-1 far fa-chevron-down"></i>
+            </a>
+            <ul class="submenu collapse list-unstyled px-2">
+                @foreach (var list in Model.Skip(4))
+                {
+                    <li class="">
+                        <div class="d-flex justify-content-between">
+                            <a id="" class="@(ViewBag.SelectedCategory == list.Id ? "active" : "") submenuItem text-decoration-none d-flex align-items-center" asp-action="Index" asp-controller="ToDoList" asp-route-id=@list.Id>
+                                <span><i class="far fa-clipboard-list"></i> @list.Name</span>
+                            </a>
+                            <div class="dropdown">
+                                <button class="btn btn-sm btn-light px-2 py-1 mb-1" data-bs-toggle="dropdown" aria-expanded="false">
+                                    <i class="far fa-ellipsis-v"></i>
+                                </button>
+                                <ul class="dropdown-menu">
+                                    <li><a class="dropdown-item" asp-action="EditList" asp-controller="ToDoList" asp-route-id=@list.Id>Edit</a></li>
+                                    <li><a class="dropdown-item" asp-action="DeleteList" asp-controller="ToDoList" asp-route-id=@list.Id>Delete</a></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </li>              
+                }
+                <li class="d-flex">
+                    <a asp-action="CreateList" asp-controller="ToDoList" class="btn btn-sm btn-light">
+                        <i class="fas fa-plus-circle"></i>
+                    </a>
+                </li>
+            </ul>
+        </li>
+    </ul>
+</div>

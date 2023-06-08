@@ -1,28 +1,43 @@
 ﻿@model ToDoItemViewModel
 
-<div asp-validation-summary="All" class="text-danger"></div>
 
-<form asp-action="AddTask" class="w-50" method="post">
-    <div class="mb-3">
-        <label asp-for="Description" class="col-form-label">Description:</label>
-        <input asp-for="Description" class="form-control"/>
+<div class="row">
+    <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <h1>Add a Task</h1>
+        <hr />
     </div>
-    <div class="mb-3">
-        <label asp-for="CategoryId" class="col-form-label">Category:</label>
-        <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories,"CategoryId","Name"))">
-        </select>
+    <div class="col-md-12 d-flex justify-content-center align-items-center">
+        <div asp-validation-summary="All" class="text-danger"></div>
     </div>
 
-    <div class="mb-3">
-        <label asp-for="DueDate" class="col-form-label">Due Date:</label>
-        <input asp-for="DueDate" class="form-control" />
+    <div class="col-md-2">
     </div>
 
-    <div class="mb-3">
-        <label asp-for="StatusId" class="col-form-label">Status:</label>
-        <select asp-for="StatusId" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses,"StatusId","Name"))">
-        </select>
+    <div class="col-md-8 d-flex justify-content-center align-items-center">
+        <form asp-action="AddTask" class="w-50" method="post">
+            <div class="mb-3">
+                <label asp-for="Description" class="col-form-label">Description:</label>
+                <input asp-for="Description" class="form-control" />
+            </div>
+            <div class="mb-3">
+                <label asp-for="CategoryId" class="col-form-label">Category:</label>
+                <select asp-for="CategoryId" class="form-control" asp-items="@(new SelectList(ViewBag.Categories,"CategoryId","Name"))">
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="DueDate" class="col-form-label">Due Date:</label>
+                <input asp-for="DueDate" class="form-control" />
+            </div>
+
+            <div class="mb-3">
+                <label asp-for="StatusId" class="col-form-label">Status:</label>
+                <select asp-for="StatusId" class="form-control" asp-items="@(new SelectList(ViewBag.Statuses,"StatusId","Name"))">
+                </select>
+            </div>
+            <button type="submit" class="btn btn-primary">Add</button>
+            <a asp-action="Index" asp-route-id="@SelectedList.Id" class="btn btn-secondary">Cancel</a>
+        </form>
     </div>
-    <button type="submit" class="btn btn-primary">Add</button>
-    <a asp-action="Index" asp-route-id="@SelectedList.Id" class="btn btn-secondary">Cancel</a>
-</form>
+
+</div>

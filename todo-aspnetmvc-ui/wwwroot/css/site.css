@@ -1,74 +1,121 @@
-﻿/* Please see documentation at https://docs.microsoft.com/aspnet/core/client-side/bundling-and-minification
-for details on configuring this project to bundle and minify static web assets. */
-
-a.navbar-brand {
-    white-space: normal;
-    text-align: center;
-    word-break: break-all;
-}
-
-/* Provide sufficient contrast against white background */
-a {
-    color: #0366d6;
-}
-
-.btn-primary {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-.nav-pills .nav-link.active, .nav-pills .show > .nav-link {
-    color: #fff;
-    background-color: #1b6ec2;
-    border-color: #1861ac;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    font-size: 14px;
-}
-
-@media (min-width: 768px) {
-    html {
-        font-size: 16px;
-    }
-}
-
-.border-top {
-    border-top: 1px solid #e5e5e5;
-}
-
-.border-bottom {
-    border-bottom: 1px solid #e5e5e5;
-}
-
-.box-shadow {
-    box-shadow: 0 .25rem .75rem rgba(0, 0, 0, .05);
-}
-
-button.accept-policy {
-    font-size: 1rem;
-    line-height: inherit;
-}
-
-/* Sticky footer styles
--------------------------------------------------- */
-html {
-    position: relative;
-    min-height: 100%;
+﻿.badge-lg {
+    font-size: 1.1rem;
+    padding: 0.5rem 0.8rem;
+    margin-top: 0.4rem;
+    margin-right: 0.2rem;
 }
 
 body {
-    /* Margin bottom by footer height */
-    margin-bottom: 60px;
+    background-color: #eee;
 }
 
-.footer {
-    position: absolute;
-    bottom: 0;
+#headicon {
+    background-color: #3761EE;
+}
+
+#tasks_indicator {
+    background-color: #EBEFFD;
+    color: #3761EE;
+}
+
+#side_nav {
+    background-color: #fff;
+    min-width: 250px;
+    max-width: 250px;
+    transition: all 0.2s;
+}
+
+.content {
+    min-height: 100vh;
     width: 100%;
-    white-space: nowrap;
-    line-height: 60px; /* Vertically center the text there */
+}
+
+hr.h-color {
+    background-color: #000;
+    height: 2px;
+}
+
+/*.sidebar li.active{
+    background:#EBEFFD;
+    border-radius: 8px;
+
+}
+.sidebar li.active a, .sidebar li.active a:hover{
+    color:#3761EE;
+}
+.sidebar li a:hover{
+    color:#3761EE;
+
+}*/
+.side-link:hover {
+    color: #3761EE;
+}
+
+.side-link:active {
+    background-color: #89a2f1;
+}
+
+.sidebarItem.active {
+    background: #EBEFFD;
+    border-radius: 8px;
+}
+
+.sidebarItem.active a, .sidebarItem.active a:hover {
+    color: #3761EE;
+}
+
+.sidebarItem a:hover {
+    color: #3761EE;
+}
+
+.sidebar li a {
+    color: #000;
+}
+
+.sidebar .sub-menu {
+    padding: 6px 6px 14px 90px;
+    margin-top: -10px;
+}
+
+.submenuItem:hover {
+    color: #3761EE;
+}
+
+.submenuItem.active {
+    color: #3761EE;
+}
+
+.sidebar ul.submenu li {
+    font-size: 18px;
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    margin-top: 0.3rem;
+    padding-left: 2rem;
+    padding-right: 1rem;
+}
+
+@media(max-width: 767px) {
+    #side_nav {
+        margin-left: -250px;
+        position: fixed;
+        min-height: 100vh;
+        z-index: 1;
+    }
+}
+
+#side_nav.active {
+    margin-left: 0;
+}
+
+.strikethrough {
+    text-decoration: line-through;
+}
+
+.rotate180 {
+    transform: rotate(180deg);
+}
+
+.form-check-input {
+    margin-right: 10px;
 }

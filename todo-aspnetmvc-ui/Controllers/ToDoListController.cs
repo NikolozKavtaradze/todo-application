@@ -20,12 +20,14 @@ namespace todo_aspnetmvc_ui.Controllers
             repository = repo;
         }
 
-        public IActionResult Index(int? id,string filter = null)
+        public IActionResult Index(int? id = 1,string filter = null)
         {
-            id ??= repository.GetToDoLists().FirstOrDefault()?.Id;
-            SelectedList.Id = id ?? 0;
+            //id ??= repository.GetToDoLists().FirstOrDefault()?.Id;
+            //SelectedList.Id = id ?? 0;
 
-            ViewBag.ListIsPresent = repository.GetToDoLists().Any();
+            //ViewBag.ListIsPresent = repository.GetToDoLists().Any();
+
+            SelectedList.Id = (int)id;
 
             var filters = new Filters(filter);
 
@@ -58,7 +60,7 @@ namespace todo_aspnetmvc_ui.Controllers
                 }
                 else if (filters.IsToday)
                 {
-                    todoItems = todoItems.Where(x => x.DueDate == today).ToList();
+                    todoItems = todoItems.Where(x => x.DueDate.Value.Date == today.Date).ToList();
 
                 }
             }
@@ -167,7 +169,6 @@ namespace todo_aspnetmvc_ui.Controllers
             return RedirectToAction("Index", new {id = SelectedList.Id, filter = filterId });
         }
 
-        [HttpPost]
         public IActionResult DeleteComplete(string filterId)
         {
             repository.DeleteComplete(SelectedList.Id);

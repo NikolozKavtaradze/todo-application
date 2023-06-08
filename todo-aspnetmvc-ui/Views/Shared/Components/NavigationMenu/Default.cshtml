@@ -1,49 +1,20 @@
-﻿@using todo_aspnetmvc_ui.Models
-@using todo_domain_entities.AggregateModels
-@model IEnumerable<ToDoList>
-
-<nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark bg-dark border-bottom box-shadow mb-3">
-    <div class="container">
-        <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Todo Application</a>
-        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                aria-expanded="false" aria-label="Toggle navigation">
+﻿
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <div class="container-fluid">
+        <div class="d-flex justify-content-between d-md-none d-block ">
+            <a class="navbar-brand fs-4" href="#">ToDo Application</a>
+            <button class="btn px-1 py-0 open-btn"><i class="fal fa-stream"></i></button>
+        </div>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
-            <ul class="navbar-nav flex-grow-1">
-                <li class="nav-item pl-3">
-                    <a class="nav-link text-light" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
-                </li>
-                <li>
-                    <div class="dropdown pl-2">
-                        <button class="btn btn-outline-info dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Lists
-                        </button>
-                        <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                            @foreach (var list in Model)
-                            {
-                                <div class="d-flex m-1">
-                                        <a class="dropdown-item me-auto mr-1" asp-action="Index" asp-controller="ToDoList" asp-route-id=@list.Id>
-                                            @list.Name
-                                            <a class="bi bi-trash btn btn-danger btn-sm mr-1" asp-action="DeleteList" asp-controller="ToDoList" asp-route-id=@list.Id></a>
-                                            <a class="bi bi-pencil btn btn-warning btn-sm mr-1" asp-action="EditList" asp-controller="ToDoList" asp-route-id=@list.Id></a>
-                                        </a>
-                                </div>
-                            }
-                            <a class="dropdown-item d-flex justify-content-between align-items-center" asp-action="CreateList" asp-controller="ToDoList">
-                                <strong><span>Add List</span></strong>
-                                <h5><span class="badge badge-dark">+</span></h5>
-                            </a>
-                        </div>
-                    </div>
+        <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+            <ul class="navbar-nav mb-2 mb-lg-0">
+                <li class="nav-item">
+                    <a class="nav-link active" aria-current="page" href="#">Profile</a>
                 </li>
             </ul>
         </div>
     </div>
 </nav>
 
-<div class="row mt-5 container">
-    <div class="col-md-5 offset-md-7">
-        <h1 class="badge-secondary badge-pill text-center">@Model.FirstOrDefault(x => x.Id == SelectedList.Id).Name</h1>
-    </div>
-</div>

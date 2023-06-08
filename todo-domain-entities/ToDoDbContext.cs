@@ -25,6 +25,12 @@ namespace todo_domain_entities
                 new Status { StatusId = "ongoing", Name = "In Progress"},
                 new Status { StatusId = "finished", Name = "Completed"}
                 );
+            modelBuilder.Entity<ToDoList>().HasData(
+                new ToDoList { Id = 1, Name = "Tasks"},
+                new ToDoList { Id = 2, Name = "My Day"},
+                new ToDoList { Id = 3, Name = "Important" },
+                new ToDoList { Id = 4, Name = "Planned" }
+                );
         }
         public DbSet<ToDoList> ToDoLists { get; set; }
         public DbSet<ToDoItem> ToDoItems { get; set; }

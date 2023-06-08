@@ -101,6 +101,17 @@ namespace todo_domain_entities.Migrations
                     { "finished", "Completed" }
                 });
 
+            migrationBuilder.InsertData(
+                table: "ToDoLists",
+                columns: new[] { "Id", "Name" },
+                values: new object[,]
+                {
+                    { 1, "Tasks" },
+                    { 2, "My Day" },
+                    { 3, "Important" },
+                    { 4, "Planned" }
+                });
+
             migrationBuilder.CreateIndex(
                 name: "IX_ToDoItems_CategoryId",
                 table: "ToDoItems",

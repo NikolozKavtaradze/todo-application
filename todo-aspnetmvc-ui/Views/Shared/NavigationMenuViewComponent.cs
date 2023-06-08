@@ -6,16 +6,13 @@ namespace todo_aspnetmvc_ui.Views.Shared
 {
     public class NavigationMenuViewComponent : ViewComponent
     {
-        private readonly ToDoDbContext _context;
-
-        public NavigationMenuViewComponent(ToDoDbContext context)
+        public NavigationMenuViewComponent()
         {
-            _context = context;
         }
 
         public IViewComponentResult Invoke()
         {
-            return View(_context.ToDoLists.OrderBy(x => x.Id));
+            return View();
         }
     }
 }

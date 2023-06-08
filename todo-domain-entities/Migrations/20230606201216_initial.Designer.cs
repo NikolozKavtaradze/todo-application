@@ -10,7 +10,7 @@ using todo_domain_entities;
 namespace todo_domain_entities.Migrations
 {
     [DbContext(typeof(ToDoDbContext))]
-    [Migration("20230524191354_initial")]
+    [Migration("20230606201216_initial")]
     partial class initial
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -135,6 +135,28 @@ namespace todo_domain_entities.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("ToDoLists");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Tasks"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "My Day"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Important"
+                        },
+                        new
+                        {
+                            Id = 4,
+                            Name = "Planned"
+                        });
                 });
 
             modelBuilder.Entity("todo_domain_entities.AggregateModels.ToDoItem", b =>

@@ -101,7 +101,7 @@ namespace todo_domain_entities.Repository
 
         public List<ToDoList> GetToDoLists()
         {
-            return _context.ToDoLists.ToList();
+            return _context.ToDoLists.Include(x => x.ToDoItems).ToList();
         }
 
         public void Save()
