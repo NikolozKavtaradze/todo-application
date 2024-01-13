@@ -15,6 +15,7 @@ namespace todo_domain_entities.Repository
 
         void CreateList(ToDoList list);
         void UpdateList(ToDoList list);
+
         void DeleteList(int id);
 
         void DeleteComplete(int listId);
